@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export interface IPlayer {
-  playerId: string;
+  trueId: string;
   username: string;
   mmr?: number;
 }
@@ -17,11 +17,16 @@ const playerSchema = new mongoose.Schema(
       getPlayerDetails: {
         get() {
           const player: IPlayer = {
-            playerId: this.playerId,
+            trueId: this._id,
             username: this.username,
             mmr: this.mmr,
           };
           return player;
+        },
+      },
+      getObjectId: {
+        get() {
+          return this._id.toString();
         },
       },
     },

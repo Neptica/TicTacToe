@@ -1,25 +1,27 @@
+import { Player } from "~/server/models/player";
 import Game from "../game/game";
 import lobby from "../lobby/lobby";
 import { BadRequestException, InternalServerError } from "~/config/error.core";
-import fetchPlayer from "~/utils/fetchPlayer";
+import mongoose, { ObjectId } from "mongoose";
 
 class MatchMaking {
-  private waitlist: Array<PlayerRequest>;
+  private waitlist: Array<string>;
 
   constructor() {
-    this.waitlist = new Array<PlayerRequest>();
+    this.waitlist = new Array<string>();
   }
 
-  public addToWaitlist(playerRequesting: PlayerRequest) {
-    for (let player of this.waitlist) {
-      if (player.id === playerRequesting.id) {
+  public addToWaitlist(playerReqId: string) {
+    console.log(this.waitlist);
+    for (let playerId of this.waitlist) {
+      if (playerId === playerReqId) {
         throw new BadRequestException("Player is already in waitlist");
       }
     }
-    if (lobby.isInGame(playerRequesting.id)) {
+    if (lobby.isInGame(playerReqId)) {
       throw new BadRequestException("Player is already in a match");
     }
-    this.waitlist.push(playerRequesting);
+    this.waitlist.push(playerReqId);
     this.tryInitMatch();
     return true;
   }
@@ -31,13 +33,15 @@ class MatchMaking {
       if (!player1Req || !player2Req) {
         throw new InternalServerError("Failed to add players to a game");
       }
-      let player1 = await fetchPlayer(player1Req);
-      let player2 = await fetchPlayer(player2Req);
+      const player1TrueId = new mongoose.Types.ObjectId(player1Req);
+      const player2TrueId = new mongoose.Types.ObjectId(player2Req);
+      let player1 = await Player.findById(player1TrueId).exec();
+      let player2 = await Player.findById(player2TrueId).exec();
       if (player1 && player2) {
-        let game = new Game(player1, player2);
+        let game = new Game(player1.getPlayerDetails, player2.getPlayerDetails);
         const gameId = lobby.createGame(game);
-        lobby.addPlayerToMatch(player1.playerId, gameId);
-        lobby.addPlayerToMatch(player2.playerId, gameId);
+        lobby.addPlayerToMatch(player1.getObjectId, gameId);
+        lobby.addPlayerToMatch(player2.getObjectId, gameId);
       } else {
         throw new Error("Matchmaking error");
       }

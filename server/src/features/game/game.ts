@@ -49,8 +49,8 @@ class Game {
       playerToWait = this.player1;
     }
 
-    if (move.playerId != playerToMove.playerId) {
-      if (move.playerId == playerToWait.playerId) {
+    if (move.trueId != playerToMove.trueId) {
+      if (move.trueId == playerToWait.trueId) {
         throw new BadRequestException("Not your turn bimbo");
       } else {
         throw new BadRequestException("This Id is not apart of this game");
@@ -74,17 +74,17 @@ class Game {
     const winningLetter = this.board.checkWinner();
     if (winningLetter) {
       if (winningLetter === "X") {
-        this.winner = this.player1.playerId;
+        this.winner = this.player1.trueId;
       } else if (winningLetter === "O") {
-        this.winner = this.player2.playerId;
+        this.winner = this.player2.trueId;
       }
     }
   }
 
   public disconnectPlayer(playerId: string) {
-    if (playerId === this.player1.playerId) {
+    if (playerId === this.player1.trueId) {
       this.player1Disconnected = true;
-    } else if (playerId === this.player2.playerId) {
+    } else if (playerId === this.player2.trueId) {
       this.player2Disconnected = true;
     }
     if (this.player1Disconnected && this.player2Disconnected) {
@@ -95,10 +95,10 @@ class Game {
 
   private retireGame() {
     const gameRecord = new GameRecord({
-      player1Id: this.player1.playerId,
-      player2Id: this.player2.playerId,
+      player1Id: this.player1.trueId,
+      player2Id: this.player2.trueId,
       winner: this.winner,
-    })
+    });
     gameRecord.save();
   }
 }

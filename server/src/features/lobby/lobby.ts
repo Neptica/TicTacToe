@@ -63,7 +63,7 @@ class Lobby {
       throw new BadRequestException("Game has been corrupted");
     }
     const game = this.games.get(gameId);
-    const gameIsEmpty = game?.disconnectPlayer(playerId)
+    const gameIsEmpty = game?.disconnectPlayer(playerId);
     if (gameIsEmpty) {
       this.games.delete(gameId);
     }
