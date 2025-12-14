@@ -1,12 +1,12 @@
-import { InternalServerError } from "~/config/error.core";
-import { Player } from "~/server/models/player";
+import { InternalServerError } from '~/config/error.core';
+import { Player } from '~/server/models/player';
 
 export const fetchPlayer = async (playerReq: PlayerRequest) => {
   const player = await Player.findOne({ playerId: playerReq.id }).exec();
   if (!player) {
     const newPlayer = new Player({
       playerId: playerReq.id,
-      username: playerReq.username,
+      username: playerReq.username
     });
     newPlayer.save();
     return newPlayer.getPlayerDetails;
@@ -19,7 +19,7 @@ export const fetchTrueId = async (playerReq: PlayerRequest) => {
   if (!player) {
     const newPlayer = new Player({
       playerId: playerReq.id,
-      username: playerReq.username,
+      username: playerReq.username
     });
     newPlayer.save();
     return newPlayer.getObjectId;
