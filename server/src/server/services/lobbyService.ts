@@ -3,9 +3,11 @@ import HTTP_STATUS from "~/config/httpStatus";
 import lobby from "~/features/lobby/lobby";
 import { Move } from "../middleware/zod/move";
 import { BadRequestException } from "~/config/error.core";
+import { ObjectId } from "mongoose";
+import { Player } from "../models/player";
 
 class LobbyService {
-  public getGameData(req: Request, res: Response) {
+  public async getGameData(req: Request, res: Response) {
     const { gameid } = req.params;
     const gameData = lobby.getGameData(gameid);
     return res
@@ -30,12 +32,21 @@ class LobbyService {
     return res.status(HTTP_STATUS.OK).json({ message: "Move succeeded" });
   }
 
-  public retirePlayerFromGame(req: Request, res: Response) {
+  public async retirePlayerFromGame(req: Request, res: Response) {
     const { playerid } = req.params;
     if (!playerid) {
       throw new BadRequestException("No Player Id parameter");
     }
-    const isDisconnected = lobby.retirePlayerFromGame(playerid);
+
+    const player = await Player.findOne({ playerId: playerid }).exec();
+    if (!player) {
+      throw new BadRequestException(
+        "Please create a player by joining a match first",
+      );
+    }
+
+    const isDisconnected = lobby.retirePlayerFromGame(player.getObjectId);
+
     if (!isDisconnected) {
       throw new BadRequestException("Failed to disconnect player from game");
     }
