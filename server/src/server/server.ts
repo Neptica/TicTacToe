@@ -5,7 +5,6 @@ import { CustomError, NotFoundException } from '~/config/error.core';
 import HTTP_STATUS from '~/config/httpStatus';
 import { connectToDatabase } from './config/dbConnection';
 import dotenv from 'dotenv';
-import getRoutes from '../utils/getRoutes';
 dotenv.config();
 
 class Server {
@@ -24,8 +23,6 @@ class Server {
 
   private setupRoutes() {
     appRoutes(this.app);
-    const routes = getRoutes(this.app);
-    console.log(routes);
   }
 
   private setupMiddleware(): void {

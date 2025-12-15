@@ -9,6 +9,11 @@ interface FriendCouple {
 }
 
 interface IRoutePayload {
-  method: "POST" | "GET" | "PUT" | "DELETE";
+  method: 'POST' | 'GET' | 'PUT' | 'DELETE';
   path: string;
+}
+
+interface IFriendRequest {
+  id: string;
+  from: string;
 }

@@ -1,4 +1,3 @@
-import { InternalServerError } from '~/config/error.core';
 import { Player } from '~/server/models/player';
 
 export const fetchPlayer = async (playerReq: PlayerRequest) => {

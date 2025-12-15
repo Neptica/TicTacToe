@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from 'mongoose';
 
 export interface IPlayer {
   trueId: string;
@@ -10,7 +10,7 @@ const playerSchema = new mongoose.Schema(
   {
     playerId: { unique: true, type: String, required: true },
     username: { type: String, required: true },
-    mmr: { type: Number, default: 600 },
+    mmr: { type: Number, default: 600 }
   },
   {
     virtuals: {
@@ -19,18 +19,18 @@ const playerSchema = new mongoose.Schema(
           const player: IPlayer = {
             trueId: this._id,
             username: this.username,
-            mmr: this.mmr,
+            mmr: this.mmr
           };
           return player;
-        },
+        }
       },
       getObjectId: {
         get() {
           return this._id.toString();
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 );
 
-export const Player = mongoose.model("Player", playerSchema);
+export const Player = mongoose.model('Player', playerSchema);
