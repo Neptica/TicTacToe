@@ -5,6 +5,7 @@ import { Spinner } from "react-bootstrap";
 function ProtectedRoute() {
   const { isAuthenticated, isLoading } = useAuth0();
   const location = useLocation();
+  console.log(location);
 
   if (isLoading) {
     return (

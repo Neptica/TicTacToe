@@ -8,9 +8,9 @@ const SignInPage = () => {
 
   const handleLogin = () => {
     loginWithRedirect({
-      appState: {
-        returnTo: location.state?.from?.pathname || "/",
-      },
+      // appState: {
+      //   returnTo: location.state?.from?.pathname || "/",
+      // }, To go back to game page
     });
   };
 

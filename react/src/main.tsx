@@ -24,15 +24,15 @@ const router = createBrowserRouter([
         Component: SignInPage,
       },
       {
-        path: "/sign-out",
-        Component: SignOutPage,
-      },
-      {
         Component: ProtectedRoute,
         children: [
           {
             path: "/game", // Probably need to be changed
             Component: GamePage,
+          },
+          {
+            path: "/sign-out",
+            Component: SignOutPage,
           },
         ],
       },
