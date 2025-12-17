@@ -7,6 +7,7 @@ class Lobby {
   private games: Map<string, Game>;
 
   constructor() {
+    // TODO: Make a timer to self destruct games and remove people from lobbies
     this.lobbies = new Map<string, string>();
     this.games = new Map<string, Game>();
   }
@@ -56,6 +57,15 @@ class Lobby {
     console.log(playerId, this.lobbies);
     if (this.lobbies.get(playerId) === undefined) {
       throw new BadRequestException("No game to retire the player from");
+    }
+    const gameId = this.lobbies.get(playerId);
+    if (!gameId) {
+      throw new BadRequestException("Game has been corrupted");
+    }
+    const game = this.games.get(gameId);
+    const gameIsEmpty = game?.disconnectPlayer(playerId);
+    if (gameIsEmpty) {
+      this.games.delete(gameId);
     }
     this.lobbies.delete(playerId);
     return this.lobbies.get(playerId) === undefined;
