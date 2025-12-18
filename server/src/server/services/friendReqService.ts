@@ -1,15 +1,9 @@
-import { Request, Response } from 'express';
 import { BadRequestException } from '~/config/error.core';
 import { FriendReqs } from '../models/friendReqs';
 import { Friends } from '../models/friends';
 
 class FriendReqService {
-  public async SendRequest(req: Request, res: Response) {
-    const players: FriendCouple = req.body;
-    if (!players) {
-      throw new BadRequestException('Post body not found');
-    }
-
+  public async SendRequest(players: FriendCouple) {
     const ReqExists = await FriendReqs.findOne({
       playerId1: players.playerId1,
       playerId2: players.playerId2
@@ -36,29 +30,19 @@ class FriendReqService {
         playerId2: players.playerId1,
         playerId1: players.playerId2
       }).exec();
-      return res.status(200).json({ message: 'Friend Request Accepted' });
+      return 'Friend Request Accepted';
     } else {
       const newReq = new FriendReqs({
         playerId1: players.playerId1,
         playerId2: players.playerId2
       });
       await newReq.save();
-      return res.status(200).json({ message: 'Friend Request Sent' });
+      return 'Friend Request Sent';
     }
   }
-
-  public async IncomingRequests(req: Request, res: Response) {
-    const playerId = req.params.playerId;
-    console.log(playerId);
-    if (!playerId) {
-      throw new BadRequestException('No playerId found attached to call');
-    }
+  public async GetIncoming(playerId: string) {
     const requestsAll = await FriendReqs.find({ playerId2: playerId }).exec();
-    const requests = requestsAll.map((req) => req.getRequest);
-    return res.status(200).json({
-      message: 'Fetched incoming friend requests',
-      data: { requests }
-    });
+    return requestsAll.map((req) => req.getRequest);
   }
 }
 

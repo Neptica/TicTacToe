@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, type Application } from 'express';
-import appRoutes from './routes/routes';
+import appRoutes from './routes';
 import cors from 'cors';
 import { CustomError, NotFoundException } from '~/config/error.core';
 import HTTP_STATUS from '~/config/httpStatus';
