@@ -28,6 +28,11 @@ const playerSchema = new mongoose.Schema(
         get() {
           return this._id.toString();
         }
+      },
+      getUsername: {
+        get() {
+          return this.username;
+        }
       }
     }
   }

@@ -13,7 +13,7 @@ class FriendController {
   }
 
   public async RemoveFriend(req: Request, res: Response) {
-    const players: FriendCouple = req.body;
+    const players: PlayerIdCoupling = req.body;
     if (!players) {
       throw new BadRequestException('Post Body not found');
     }

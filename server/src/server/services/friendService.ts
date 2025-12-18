@@ -10,7 +10,7 @@ class FriendService {
     });
     return friendsList;
   }
-  public async RemoveFriends(players: FriendCouple) {
+  public async RemoveFriends(players: PlayerIdCoupling) {
     // The difference between who's first and last is who initiated the friendship
     const deleted = await Friends.deleteMany({
       $or: [

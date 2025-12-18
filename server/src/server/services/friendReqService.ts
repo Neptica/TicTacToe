@@ -3,7 +3,7 @@ import { FriendReqs } from '../models/friendReqs';
 import { Friends } from '../models/friends';
 
 class FriendReqService {
-  public async SendRequest(players: FriendCouple) {
+  public async SendRequest(players: PlayerIdCoupling) {
     const ReqExists = await FriendReqs.findOne({
       playerId1: players.playerId1,
       playerId2: players.playerId2
