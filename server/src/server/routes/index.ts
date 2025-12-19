@@ -1,17 +1,17 @@
 import type { Application } from 'express';
-import testRoute from '../controllers/testRoute';
-import matchMakingRoute from '../controllers/matchMakingRoute';
-import lobbyRoute from '../controllers/lobbyRoute';
-import friendRoute from '../controllers/friendRoute';
-import friendReqRoute from '../controllers/friendReqRoute';
+import matchMakingRoute from './matchMakingRoute';
+import lobbyRoute from './lobbyRoute';
+import friendRoute from './friendRoute';
+import friendReqRoute from './friendReqRoute';
+import textChannelRoute from './textChannelRoute';
 
 function appRoutes(app: Application) {
   const forerunner = '/api';
-  app.use(`${forerunner}/test`, testRoute);
   app.use(`${forerunner}/matchmaking`, matchMakingRoute);
   app.use(`${forerunner}/lobby`, lobbyRoute);
   app.use(`${forerunner}/friends`, friendRoute);
   app.use(`${forerunner}/friendreqs`, friendReqRoute);
+  app.use(`${forerunner}/textchannels`, textChannelRoute);
 }
 
 export default appRoutes;

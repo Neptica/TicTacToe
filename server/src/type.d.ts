@@ -3,7 +3,7 @@ interface PlayerRequest {
   username: string;
 }
 
-interface FriendCouple {
+interface PlayerIdCoupling {
   playerId1: string;
   playerId2: string;
 }
@@ -16,4 +16,10 @@ interface IRoutePayload {
 interface IFriendRequest {
   id: string;
   from: string;
+}
+
+interface IMessagePayload {
+  channelId: string;
+  playerId: string;
+  message: string;
 }
