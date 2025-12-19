@@ -4,6 +4,7 @@ import lobbyRoute from './lobbyRoute';
 import friendRoute from './friendRoute';
 import friendReqRoute from './friendReqRoute';
 import textChannelRoute from './textChannelRoute';
+import userRoute from './userRoute';
 
 function appRoutes(app: Application) {
   const forerunner = '/api';
@@ -12,6 +13,7 @@ function appRoutes(app: Application) {
   app.use(`${forerunner}/friends`, friendRoute);
   app.use(`${forerunner}/friendreqs`, friendReqRoute);
   app.use(`${forerunner}/textchannels`, textChannelRoute);
+  app.use(`${forerunner}/user`, userRoute);
 }
 
 export default appRoutes;

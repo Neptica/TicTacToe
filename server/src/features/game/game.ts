@@ -1,8 +1,8 @@
-import { move } from "~/server/middleware/zod/move";
-import Board from "./board";
-import { BadRequestException } from "~/config/error.core";
-import { IPlayer } from "~/server/models/player";
-import { GameRecord } from "~/server/models/game";
+import { move } from '~/server/middleware/zod/move';
+import Board from './board';
+import { BadRequestException } from '~/config/error.core';
+import { IPlayer } from '~/server/models/player';
+import { GameRecord } from '~/server/models/game';
 
 class Game {
   private board: Board;
@@ -51,9 +51,9 @@ class Game {
 
     if (move.trueId != playerToMove.trueId) {
       if (move.trueId == playerToWait.trueId) {
-        throw new BadRequestException("Not your turn bimbo");
+        throw new BadRequestException('Not your turn bimbo');
       } else {
-        throw new BadRequestException("This Id is not apart of this game");
+        throw new BadRequestException('This Id is not apart of this game');
       }
     }
 
@@ -64,21 +64,24 @@ class Game {
       throw new BadRequestException("'j' is not in bounds");
     }
 
-    const symbol = this.player1Turn ? "X" : "O";
+    const symbol = this.player1Turn ? 'X' : 'O';
     const moved = this.board.setSquare(move.i, move.j, symbol);
     if (!moved) {
-      throw new BadRequestException("Square already filled");
+      throw new BadRequestException('Square already filled');
     }
 
     this.player1Turn = !this.player1Turn;
     const winningLetter = this.board.checkWinner();
     if (winningLetter) {
-      if (winningLetter === "X") {
+      if (winningLetter === 'X') {
         this.winner = this.player1.trueId;
-      } else if (winningLetter === "O") {
+        return [this.player1.trueId, this.player2.trueId];
+      } else if (winningLetter === 'O') {
         this.winner = this.player2.trueId;
+        return [this.player2.trueId, this.player1.trueId];
       }
     }
+    return ['', ''];
   }
 
   public disconnectPlayer(playerId: string) {
@@ -97,7 +100,7 @@ class Game {
     const gameRecord = new GameRecord({
       player1Id: this.player1.trueId,
       player2Id: this.player2.trueId,
-      winner: this.winner,
+      winner: this.winner
     });
     gameRecord.save();
   }

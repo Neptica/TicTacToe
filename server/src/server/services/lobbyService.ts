@@ -1,6 +1,6 @@
 import lobby from '~/features/lobby/lobby';
 import { move } from '../middleware/zod/move';
-import { BadRequestException } from '~/config/error.core';
+import { BadRequestException, NotFoundException } from '~/config/error.core';
 import { Player } from '../models/player';
 
 class LobbyService {
@@ -13,7 +13,24 @@ class LobbyService {
       throw new BadRequestException('Game not found');
     }
 
-    game.makeMove(moveData);
+    const [winnerId, loserId] = game.makeMove(moveData);
+    if (winnerId) {
+      const players = await Promise.all([Player.findById(winnerId), Player.findById(loserId)]);
+      if (!players[0] || !players[1]) {
+        throw new NotFoundException('Could not find each player in the database. MMR will not be granted');
+      }
+      const mmrs = [players[0]?.getPlayerDetails.mmr, players[1]?.getPlayerDetails.mmr];
+      if (!mmrs[0]) {
+        mmrs[0] = 600;
+      }
+      if (!mmrs[1]) {
+        mmrs[1] = 600;
+      }
+      const gain = 30 + Math.round((mmrs[0] - mmrs[1]) / 10);
+      players[0].mmr += gain;
+      players[1].mmr -= gain;
+      await Promise.all([players[0].save(), players[1].save()]);
+    }
   }
   public async retirePlayerFromGame(playerId: string) {
     const player = await Player.findOne({ playerId: playerId }).exec();
