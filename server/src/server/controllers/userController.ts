@@ -5,7 +5,6 @@ import { userService } from '../services/userService';
 class UserController {
   public async getPlayer(req: Request, res: Response) {
     const playerId = req.params.playerid;
-    console.log(playerId);
     if (!playerId) {
       throw new BadRequestException('PlayerId was not found in the url');
     }

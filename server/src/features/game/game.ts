@@ -31,13 +31,22 @@ class Game {
     const board = this.board.getGameBoard();
     const player1 = this.player1;
     const player2 = this.player2;
+    const player1Turn = this.player1Turn;
     const gameWinner = this.winner;
-    return { board, player1, player2, gameWinner };
+    return { board, player1, player2, player1Turn, gameWinner };
+  }
+
+  private getGameWinner() {
+    if (this.winner === this.player1.trueId) {
+      return this.player1.username;
+    }
+    return this.player2.username;
   }
 
   public makeMove(move: move) {
-    if (typeof this.winner === undefined) {
-      throw new BadRequestException(`Player ${this.winner} has already won`);
+    console.log(move);
+    if (this.winner !== undefined) {
+      throw new BadRequestException(`${this.getGameWinner()} has already won`);
     }
     let playerToMove: IPlayer;
     let playerToWait: IPlayer;

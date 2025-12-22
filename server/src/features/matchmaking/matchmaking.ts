@@ -1,8 +1,8 @@
-import { Player } from "~/server/models/player";
-import Game from "../game/game";
-import lobby from "../lobby/lobby";
-import { BadRequestException, InternalServerError } from "~/config/error.core";
-import mongoose, { ObjectId } from "mongoose";
+import { Player } from '~/server/models/player';
+import Game from '../game/game';
+import lobby from '../lobby/lobby';
+import { BadRequestException, InternalServerError } from '~/config/error.core';
+import mongoose from 'mongoose';
 
 class MatchMaking {
   private waitlist: Array<string>;
@@ -12,14 +12,13 @@ class MatchMaking {
   }
 
   public addToWaitlist(playerReqId: string) {
-    console.log(this.waitlist);
     for (let playerId of this.waitlist) {
       if (playerId === playerReqId) {
-        throw new BadRequestException("Player is already in waitlist");
+        throw new BadRequestException('Player is already in waitlist');
       }
     }
     if (lobby.isInGame(playerReqId)) {
-      throw new BadRequestException("Player is already in a match");
+      throw new BadRequestException('Player is already in a match');
     }
     this.waitlist.push(playerReqId);
     this.tryInitMatch();
@@ -31,7 +30,7 @@ class MatchMaking {
       let player1Req = this.waitlist.shift();
       let player2Req = this.waitlist.shift();
       if (!player1Req || !player2Req) {
-        throw new InternalServerError("Failed to add players to a game");
+        throw new InternalServerError('Failed to add players to a game');
       }
       const player1TrueId = new mongoose.Types.ObjectId(player1Req);
       const player2TrueId = new mongoose.Types.ObjectId(player2Req);
@@ -43,7 +42,7 @@ class MatchMaking {
         lobby.addPlayerToMatch(player1.getObjectId, gameId);
         lobby.addPlayerToMatch(player2.getObjectId, gameId);
       } else {
-        throw new Error("Matchmaking error");
+        throw new Error('Matchmaking error');
       }
     }
   }

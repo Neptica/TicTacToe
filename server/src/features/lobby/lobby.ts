@@ -1,6 +1,6 @@
-import { BadRequestException, NotFoundException } from "~/config/error.core";
-import Game from "../game/game";
-import generateUUID from "~/utils/generateUUID";
+import { BadRequestException, NotFoundException } from '~/config/error.core';
+import Game from '../game/game';
+import generateUUID from '~/utils/generateUUID';
 
 class Lobby {
   private lobbies: Map<string, string>;
@@ -32,7 +32,7 @@ class Lobby {
   public getGameId(playerId: string) {
     const gameId = this.lobbies.get(playerId);
     if (!gameId) {
-      throw new NotFoundException("Player is not currently in a match");
+      throw new NotFoundException('Player is not currently in a match');
     }
     return gameId;
   }
@@ -40,7 +40,7 @@ class Lobby {
   public getGameFromPlayerId(gameId: string) {
     const game = this.games.get(gameId);
     if (!game) {
-      throw new NotFoundException("Game Id dangles");
+      throw new NotFoundException('Game Id dangles');
     }
     return game;
   }
@@ -48,19 +48,18 @@ class Lobby {
   public getGameData(gameId: string) {
     const game = this.games.get(gameId);
     if (!game) {
-      throw new NotFoundException("Game not found");
+      throw new NotFoundException('Game not found');
     }
     return game.getGameDetails();
   }
 
   public retirePlayerFromGame(playerId: string) {
-    console.log(playerId, this.lobbies);
     if (this.lobbies.get(playerId) === undefined) {
-      throw new BadRequestException("No game to retire the player from");
+      throw new BadRequestException('No game to retire the player from');
     }
     const gameId = this.lobbies.get(playerId);
     if (!gameId) {
-      throw new BadRequestException("Game has been corrupted");
+      throw new BadRequestException('Game has been corrupted');
     }
     const game = this.games.get(gameId);
     const gameIsEmpty = game?.disconnectPlayer(playerId);

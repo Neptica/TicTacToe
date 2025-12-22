@@ -5,7 +5,7 @@ import { Player } from '../models/player';
 
 class LobbyService {
   public async getGameData(gameid: string) {
-    lobby.getGameData(gameid);
+    return lobby.getGameData(gameid);
   }
   public async makeMove(gameid: string, moveData: move) {
     const game = lobby.getGameFromPlayerId(gameid);
@@ -26,14 +26,16 @@ class LobbyService {
       if (!mmrs[1]) {
         mmrs[1] = 600;
       }
-      const gain = 30 + Math.round((mmrs[0] - mmrs[1]) / 10);
+      let gain = 30 + Math.round((mmrs[1] - mmrs[0]) / 20);
+      gain = gain > 0 ? gain : 1;
+      console.log(mmrs, gain);
       players[0].mmr += gain;
       players[1].mmr -= gain;
       await Promise.all([players[0].save(), players[1].save()]);
     }
   }
   public async retirePlayerFromGame(playerId: string) {
-    const player = await Player.findOne({ playerId: playerId }).exec();
+    const player = await Player.findById(playerId);
     if (!player) {
       throw new BadRequestException('Please create a player by joining a match first');
     }
